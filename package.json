@@ -1,0 +1,62 @@
+{
+  "name": "tong",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_OPTIONS='--inspect' APP_VERSION=\"$(date +'%Y-%m-%d %H:%M:%S')\" next dev",
+    "build": "APP_VERSION=$(date +'%Y-%m-%d %H:%M:%S') NODE_ENV=production next build --no-lint",
+    "build:test": "APP_VERSION=$(date +'%Y-%m-%d %H:%M:%S') NODE_ENV=test next build --no-lint",
+    "start": "next start",
+    "types-check": "tsc --pretty --noEmit",
+    "format": "prettier --write --list-different \"src/**/*+(js|jsx|ts|tsx|scss)\"",
+    "lint-staged": "lint-staged",
+    "postinstall": "[ \"$NODE_ENV\" = production ] && exit 0; husky install",
+    "cypress:run": "cypress run --component --spec \"src/test/components\""
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^4.35.3",
+    "antd": "^5.6.1",
+    "axios": "^1.5.0",
+    "classnames": "^2.3.2",
+    "next": "^13.4.19",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-intersection-observer": "^9.5.2",
+    "tailwindcss": "^3.3.3",
+    "@svgr/webpack": "^6.2.1",
+    "@types/node": "^20.6.0",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "typescript": "^5.2.2",
+    "autoprefixer": "^10.4.15"
+  },
+  "devDependencies": {
+    "sass": "^1.67.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "cypress": "^12.17.1",
+    "eslint": "^8.49.0",
+    "eslint-config-next": "^13.4.19",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^14.0.1",
+    "postcss": "^8.4.29",
+    "prettier": "^3.0.3",
+    "stylelint": "^15.10.3",
+    "stylelint-config-prettier-scss": "^1.0.0",
+    "stylelint-config-standard-scss": "11.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,scss}": [
+      "npm run format"
+    ],
+    "*.{css,scss}": [
+      "npx stylelint"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "npx eslint -c .eslintrc.js --fix"
+    ]
+  }
+}

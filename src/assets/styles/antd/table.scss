@@ -1,0 +1,25 @@
+.ant-table-thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.ant-table-thead .ant-table-cell {
+  padding: 8px 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  background-color: #fff;
+  border-top: 1px solid var(--grey-200);
+  border-bottom: 1px solid var(--grey-200);
+  text-align: center;
+}
+
+.ant-table-thead
+  > tr
+  > th:not(:last-child, .ant-table-selection-column, .ant-table-row-expand-icon-cell, [colspan])::before {
+  content: none;
+}
+
+.ant-table-tbody > tr > td:not(:nth-child(1)) {
+  text-align: center;
+}

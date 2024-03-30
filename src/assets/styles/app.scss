@@ -1,0 +1,63 @@
+// common styles
+@import 'common/scrollbar';
+@import 'common/icon';
+
+// antd default styles
+@import 'antd/button';
+@import 'antd/modal';
+@import 'antd/collapse';
+@import 'antd/skeleton';
+@import 'antd/table';
+@import 'antd/tag';
+@import '@/components/messages/message';
+
+// tailwind lib
+@import './libs/tailwind';
+
+// module styles
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Roboto, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+:root {
+  --primary-dark: #006534;
+  --primary: #00904a;
+  --primary-light: #33a66e;
+  --primary-lighter: #b3dec9;
+  --primary-lightest: #e5f4ed;
+  --black-1: #000000e0;
+  --red-1: #eb5757;
+  --grey-500: #5c5c5c;
+  --grey-400: #7a7a7a;
+  --grey-300: #9a9a9a;
+  --grey-275: #a8a4a4;
+  --grey-250: #bdbdbd;
+  --grey-200: #d6d6d6;
+  --grey-100: #e8e8e8;
+  --blue-200: #d1f8f3;
+  --blue-500: #18a0fb;
+}
