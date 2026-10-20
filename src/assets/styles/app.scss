@@ -44,13 +44,13 @@ h6 {
 }
 
 :root {
-  --primary-dark: #006534;
-  --primary: #00904a;
-  --primary-light: #33a66e;
-  --primary-lighter: #b3dec9;
-  --primary-lightest: #e5f4ed;
+  --primary-dark: #1d4ed8;
+  --primary: #2563eb;
+  --primary-light: #3b82f6;
+  --primary-lighter: #bfdbfe;
+  --primary-lightest: #eff6ff;
   --black-1: #000000e0;
-  --red-1: #eb5757;
+  --red-1: #ef4444;
   --grey-500: #5c5c5c;
   --grey-400: #7a7a7a;
   --grey-300: #9a9a9a;
@@ -60,4 +60,33 @@ h6 {
   --grey-100: #e8e8e8;
   --blue-200: #d1f8f3;
   --blue-500: #18a0fb;
+  --sidebar-bg: #111827;
+  --page-bg: #f5f6f8;
+}
+
+html,
+body {
+  background: var(--page-bg);
+  color: #111827;
+  -webkit-tap-highlight-color: transparent;
+}
+
+// iOS safe area for the bottom tab bar / sticky cart bar
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

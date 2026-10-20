@@ -1,6 +1,6 @@
 const auth = {
   TOKEN: 'token',
-  API_KEY: 'api_key',
+  RESTAURANT_ID: 'restaurant_id',
 };
 
 export default auth;

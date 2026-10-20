@@ -1,49 +1,26 @@
-import { APIResponse } from '@/interfaces';
-import axios, { AxiosResponse, AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { ApiError } from '@/interfaces';
+import auth from '@/constants/auth';
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 
-let isRefreshing = false;
-let failedQueue: any[] = [];
-
-const REFRESH_URL = process.env.NEXT_PUBLIC_APP_URL;
 const errorMessage = 'Có lỗi trong quá trình thực thi';
 
-const errorCallback = (status: number, error: string) => {
-  return { status, error: error ?? errorMessage };
+export const API_HOST = (process.env.NEXT_PUBLIC_API_HOST || 'http://localhost:3000').replace(/\/$/, '');
+export const API_URL = `${API_HOST}/api`;
+
+// Validation errors return `message` as an array
+const normalizeMessage = (message: unknown) => {
+  if (Array.isArray(message)) return message.join('\n');
+  if (typeof message === 'string') return message;
+  return errorMessage;
 };
 
-const processQueue = (error: AxiosError | null, token = null) => {
-  failedQueue.forEach((item) => {
-    if (error) {
-      item.reject(error);
-    } else {
-      item.resolve(token);
-    }
-  });
-
-  failedQueue = [];
-};
-
-const handleGetToken = async () => {
-  window.location.href = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/login`;
-};
-
-const handle403Status = async (dataError, config) => {
-  if (config.url === `${REFRESH_URL}/api/auth/refresh_token`) {
-    handleGetToken();
-  }
-  return errorCallback(403, dataError?.message);
-};
-
-const handleRefreshToken = async (config: InternalAxiosRequestConfig<any>, api: AxiosInstance) => {
-  return new Promise((resolve, reject) => {
-    failedQueue.push({ resolve, reject });
-  })
-    .then(() => {
-      if (config) return api(config);
-    })
-    .catch((err) => {
-      return Promise.reject(err);
-    });
+const handleUnauthorized = () => {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(auth.TOKEN);
+  const { pathname } = window.location;
+  // Public QR pages and auth pages never require login
+  if (pathname.startsWith('/order') || pathname === '/login' || pathname === '/register') return;
+  window.location.href = `/login?redirect=${encodeURIComponent(pathname)}`;
 };
 
 class ApiClient {
@@ -64,74 +41,32 @@ class ApiClient {
     });
 
     api.interceptors.request.use(
-      (config: any) => {
-        const token = localStorage.getItem('token') ?? '';
-
-        if (config.headers) {
+      (config) => {
+        const token = typeof window !== 'undefined' ? localStorage.getItem(auth.TOKEN) : null;
+        if (token && config.headers) {
           config.headers['Authorization'] = `Bearer ${token}`;
-          config.headers['apptype'] = 'web';
         }
         return config;
       },
-      (error) => {
-        return Promise.reject(error);
-      },
+      (error) => Promise.reject(error),
     );
 
     api.interceptors.response.use(
-      (response: AxiosResponse) => {
-        const data = response.data;
-
-        if (data.success === false) {
-          const message = typeof data?.message === 'string' ? data?.message : errorMessage;
-          return { ...response.data, status: 400, error: message };
-        }
-
-        return response.data;
-      },
-      async (error: AxiosError) => {
-        const config = error.config;
+      (response: AxiosResponse) => response.data,
+      (error: AxiosError) => {
         const resError = error.response;
         const dataError: any = resError?.data;
+        const status = resError?.status ?? 0;
 
-        switch (resError?.status) {
-          case 500:
-            return errorCallback(500, dataError?.message);
-          case 403: {
-            return handle403Status(dataError, config);
-          }
-          case 401: {
-            if (config.url === `${REFRESH_URL}/api/auth/refresh_token`) {
-              handleGetToken();
-              return errorCallback(401, dataError?.message);
-            }
+        const isAuthRequest = /\/auth\/(login|register|change-password)$/.test(error.config?.url ?? '');
+        if (status === 401 && !isAuthRequest) handleUnauthorized();
 
-            // Handle if token is refreshing
-            if (isRefreshing) {
-              return handleRefreshToken(config, api);
-            }
-            isRefreshing = true;
-
-            const res: APIResponse<{
-              access_token: string;
-            }> = await api.get(`${REFRESH_URL}/api/auth/refresh_token`);
-
-            if (res?.data?.access_token) {
-              const { access_token } = res.data;
-              localStorage.setItem('token', access_token);
-              processQueue(null, access_token);
-              if (config)
-                return api(config).finally(() => {
-                  isRefreshing = false;
-                });
-            }
-
-            return Promise.reject(error);
-          }
-
-          default:
-            return errorCallback(500, dataError?.message);
-        }
+        const apiError: ApiError = {
+          status,
+          message: status ? normalizeMessage(dataError?.message) : 'Không kết nối được tới máy chủ',
+          data: dataError,
+        };
+        return Promise.reject(apiError);
       },
     );
     return api;

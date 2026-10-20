@@ -2,20 +2,21 @@ import { ThemeConfig } from '@/UI';
 
 export const theme: ThemeConfig = {
   token: {
-    colorPrimary: '#00904a',
+    colorPrimary: '#2563eb',
+    colorSuccess: '#10b981',
+    colorWarning: '#f59e0b',
+    colorError: '#ef4444',
     fontSize: 14,
-    borderRadius: 4,
-    colorBorder: '#E8E8E8',
-    controlHeightLG: 44,
+    borderRadius: 8,
+    colorBorder: '#E5E7EB',
+    controlHeightLG: 46,
     controlHeight: 40,
     controlHeightSM: 32,
-    // boxShadow: '#00904a33',
+    fontFamily: 'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
   components: {
-    Modal: {
-      paddingContentHorizontalLG: 0,
-      paddingMD: 0,
-      colorTextHeading: '#fff',
+    Button: {
+      fontWeight: 500,
     },
   },
 };

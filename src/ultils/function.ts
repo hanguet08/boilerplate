@@ -1,5 +1,3 @@
-import { ListPage, ListPageWithSameRules } from './listPage';
-import { isDevelopment } from './helper';
 import lodash from '@/ultils/lodash';
 
 export function normalizeText(str: string) {
@@ -64,32 +62,6 @@ export const inIframe = () => {
     return window.self !== window.top;
   } catch (error) {
     return false;
-  }
-};
-
-export const hasPermission = (pathName: string, userInfo: any): boolean => {
-  const componentRule =
-    ListPage[pathName] || ListPageWithSameRules.find((item) => item.alias.includes(pathName))?.matchingRule;
-
-  if (!userInfo) return false;
-  if (!componentRule || isDevelopment()) return true;
-
-  const { operator, rules } = componentRule;
-  if (operator === 'OR') {
-    const ruleKeys = lodash.keys(rules);
-    return ruleKeys.some((key) => {
-      if (rules[key].length === 0) return true;
-      return rules[key].includes(userInfo[key]);
-    });
-  }
-  if (operator === 'AND') {
-    return rules.some((rule) => {
-      const ruleKeys = lodash.keys(rule);
-      return ruleKeys.every((key) => {
-        if (rule[key].length === 0) return true;
-        return rule[key].includes(userInfo[key]);
-      });
-    });
   }
 };
 

@@ -1,27 +1,21 @@
-.ant-modal .ant-modal-header {
-  position: relative;
-  padding: 10px 24px;
-  background-color: var(--primary);
-  margin: 0;
-}
-
-.ant-modal-title {
-  color: #fff;
-  text-align: center;
+.ant-modal .ant-modal-title {
   font-weight: 600;
 }
 
-.ant-modal-close-x {
-  line-height: 2.5rem;
-  height: 2.5rem;
-  color: #fff;
-}
+// Bottom-sheet style modals on phones
+@media (max-width: 640px) {
+  .ant-modal.sheet-modal {
+    top: auto;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    max-width: 100vw;
+    position: fixed;
+    left: 0;
+    right: 0;
 
-.ant-modal-body {
-  padding: 12px 24px;
-}
-
-.ant-modal .ant-modal-footer {
-  margin: 0;
-  padding: 10px 16px;
+    .ant-modal-content {
+      border-radius: 16px 16px 0 0;
+    }
+  }
 }

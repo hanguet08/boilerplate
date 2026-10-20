@@ -13,6 +13,15 @@ export default class WebAppDocument extends Document {
             rel="stylesheet"
           />
           <meta app-version={this.appVersion} />
+          <meta name="description" content="QOrder - Gọi món bằng QR cho nhà hàng" />
+          <meta name="theme-color" content="#2563eb" />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="icon" href="/icons/icon-192.png" />
+          <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-title" content="QOrder" />
         </Head>
         <body>
           <Main />
